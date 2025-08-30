@@ -2,7 +2,7 @@ package com.example.myapp.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "users") // 'user' is reserved in Postgres, so use 'users'
 public class User {
@@ -20,6 +20,7 @@ public class User {
 
     // One user can have multiple trips
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Trip> trips;
 
     public User() {}

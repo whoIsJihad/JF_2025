@@ -2,6 +2,13 @@ package com.example.myapp.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents a place of interest within a trip.
+ * This class is a JPA entity that maps to the "place" table in the database.
+ * Each Place object contains details about a specific location, such as its name,
+ * type (e.g., restaurant, sightseeing), location, and rating. It is associated
+ * with a single {@link Trip}, forming a many-to-one relationship.
+ */
 @Entity
 public class Place {
 

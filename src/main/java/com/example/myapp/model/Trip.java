@@ -1,5 +1,6 @@
 package com.example.myapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Trip {
 
     // Many trips belong to one user
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 

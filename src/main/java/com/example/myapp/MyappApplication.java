@@ -14,12 +14,5 @@ public class MyappApplication {
         SpringApplication.run(MyappApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner run(UserRepository userRepository) {
-        return args -> {
-            User user = new User("Johssn Doe", "joeeehn@example.com", "password123");
-            userRepository.save(user);
-            System.out.println("User saved: " + user.getId());
-        };
-    }
+   
 }
