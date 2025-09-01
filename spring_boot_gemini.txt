@@ -1,0 +1,19 @@
+at the heart of any spring application is the ApplicationContext
+which is the techincal name for the IOC container. its main responsibility is to manage the lifecycle of objects , 
+which it calls beams. this management includes 
+	instantiation
+	configurtation
+	assembly 
+When your application starts by SpringApplication.run() , the first thing that the framework does is initiate component scanning
+The scan begins at the package of main application class (the one with the @SpringBootApplication)
+
+It recursively scans the entire project and all its subdirectories 
+The goal is to find any class marked with stereotype annotation. The fundamental stereotype is the @Component
+
+@Component is the generic spring component . If you were to look at the source code for these annotations, you would see that they are meta annotated with
+@Component
+@Service : A specialisation of @Component for the service layer . it indicateds the class holds business logic 
+@Repository: For the data access layer
+@Configuration : A specialisation of the @Component that indicates that this class declares beans using the @Bean annotation
+
+

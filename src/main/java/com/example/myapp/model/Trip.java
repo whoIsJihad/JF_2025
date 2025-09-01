@@ -1,89 +1,60 @@
 package com.example.myapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
+@Table(name = "trips")
 public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String city;
-
-    private LocalDate startDate;
-    private LocalDate endDate;
-
-    private String preferences; // simple CSV for now, can normalize later
-
-    // Many trips belong to one user
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // Can be nullable for anonymous users
+    @JsonBackReference("user-trips")
     private User user;
 
-    // One trip can have multiple places
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private List<Place> places;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
-    public Trip() {}
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "hotel_location")
+    private String hotelLocation; // e.g., "Latitude,Longitude"
 
-    public String getCity() {
-        return city;
-    }
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("trip-meetings")
+    private Set<MeetingSlot> meetingSlots;
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+    @ManyToMany
+    @JoinTable(
+        name = "trip_preferences",
+        joinColumns = @JoinColumn(name = "trip_id"),
+        inverseJoinColumns = @JoinColumn(name = "preference_id")
+    )
+    private Set<PreferenceType> preferences;
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(String preferences) {
-        this.preferences = preferences;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
-    }
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("trip-itinerary")
+    private Set<ItineraryItem> itineraryItems;
 }

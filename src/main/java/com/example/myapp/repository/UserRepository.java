@@ -8,7 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Can add custom queries later
+    /**
+     * Finds a user by their email address.
+     * Spring Data JPA automatically implements this method based on its name.
+     */
     Optional<User> findByEmail(String email);
-
 }
