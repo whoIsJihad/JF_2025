@@ -1,8 +1,9 @@
 package com.example.myapp.service;
 
-import com.example.myapp.model.MeetingSlot;
-import com.example.myapp.model.Trip;
+
+import com.example.myapp.model.*;
 import com.example.myapp.repository.TripRepository;
+import com.example.myapp.repository.AttractionRepository;
 import com.example.myapp.service.TimeSlot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +14,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ItineraryService {
 
     private final TripRepository tripRepository;
-
+    private final AttractionRepository attractionRepository;
     @Autowired
-    public ItineraryService(TripRepository tripRepository) {
+    public ItineraryService(TripRepository tripRepository, AttractionRepository attractionRepository) {
         this.tripRepository = tripRepository;
+        this.attractionRepository = attractionRepository;
     }
 
     /**
@@ -70,5 +73,21 @@ public class ItineraryService {
         }
 
         return freeSlots;
+    }
+
+    @Transactional(readOnly=true)
+    public List<Attraction> findAttractionsForTrip(Long tripId){
+        Trip trip= tripRepository.findById(tripId)
+                .orElseThrow(()->new RuntimeException("Trip not found with id: "+tripId));
+
+        Integer cityId=trip.getCity().getId();
+        Set<String> preferenceTypes=trip.getPreferences().stream()
+                .map(PreferenceType::getName)
+                .collect(Collectors.toSet());
+        if(preferenceTypes.isEmpty()){
+            return Collections.emptyList(); 
+        
+        }
+        return attractionRepository.findByCityIdAndTypeIn(cityId,preferenceTypes);
     }
 }
