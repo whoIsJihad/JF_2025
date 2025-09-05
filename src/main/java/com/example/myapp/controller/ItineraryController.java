@@ -36,6 +36,12 @@ public class ItineraryController{
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{tripId}/available-attractions")
+    public ResponseEntity<List<AttractionDto>> getAvailableAttractions(@PathVariable Long tripId){
+        List<AttractionDto> attractions=itineraryService.findAvailableAttractions(tripId);
+        return ResponseEntity.ok(attractions);
+    }
+
     @GetMapping("/{tripId}/attractions")
     public ResponseEntity<List<AttractionDto>> getAttractionsForTrip(@PathVariable Long tripId){
         List<Attraction> attractions=itineraryService.findAttractionsForTrip(tripId);
