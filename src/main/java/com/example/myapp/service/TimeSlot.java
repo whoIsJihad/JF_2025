@@ -1,8 +1,7 @@
 package com.example.myapp.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
@@ -11,9 +10,8 @@ import java.time.LocalDateTime;
  * This is used as a common data structure for both busy and free time slots
  * within the itinerary generation algorithm.
  */
-@Getter
+@Data
 @AllArgsConstructor
-@ToString
 public class TimeSlot {
     private final LocalDateTime start;
     private final LocalDateTime end;

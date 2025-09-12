@@ -72,7 +72,13 @@ public class TripService {
         // 4. Build and return the response DTO
         return buildTripResponse(savedTrip);
     }
-
+    
+    public List<TripResponse> findAllTrips(Long userID){
+        List<Trip> allTrips=tripRepository.findByUserId(userID);
+        
+        List<TripResponse> tripResponses= allTrips.stream().map(this::buildTripResponse).collect(Collectors.toList());
+        return tripResponses;
+    }
     private TripResponse buildTripResponse(Trip trip) {
         TripResponse response = new TripResponse();
         response.setId(trip.getId());

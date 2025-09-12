@@ -3,7 +3,7 @@ package com.example.myapp.controller;
 import com.example.myapp.dto.*;
 import com.example.myapp.service.ItineraryService;
 import com.example.myapp.service.TimeSlot;
-import com.example.myapp.model.Attraction;
+import com.example.myapp.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +41,12 @@ public class ItineraryController{
         List<AttractionDto> attractions=itineraryService.findAvailableAttractions(tripId);
         return ResponseEntity.ok(attractions);
     }
+    @GetMapping("/{tripId}/suggested-itinerary")
 
+    public ResponseEntity<List<ItineraryItemDto>> getSuggestedItinerary(@PathVariable Long tripId){
+        List<ItineraryItemDto> itinerary=itineraryService.generateItinerary(tripId);
+        return ResponseEntity.ok(itinerary);
+    }
     @GetMapping("/{tripId}/attractions")
     public ResponseEntity<List<AttractionDto>> getAttractionsForTrip(@PathVariable Long tripId){
         List<Attraction> attractions=itineraryService.findAttractionsForTrip(tripId);
