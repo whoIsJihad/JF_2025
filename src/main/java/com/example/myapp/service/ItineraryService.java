@@ -101,6 +101,8 @@ public class ItineraryService {
         }
 
         // save them all to DB and convert to DTOs
+        itineraryItemRepository.saveAll(scheduledItems);
+        
         List<ItineraryItemDto> dtoList = scheduledItems.stream().map(item -> {
             ItineraryItemDto dto = new ItineraryItemDto();
             dto.setId(item.getId());
